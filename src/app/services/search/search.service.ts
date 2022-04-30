@@ -17,8 +17,9 @@ export class SearchService {
   }
 
   public getjobs(filter?: any, params: any = {}, count: number = 30): Observable<any> {
+  //  Note: job id 1 should not be display on the dashboard
     let queryArray: string[] = [];
-    params.query = `(isOpen:1) AND (isDeleted:0)${this.formatAdditionalCriteria(true)}${this.formatFilter(filter, true)}`;
+    params.query = `!(id:1) AND (isOpen:1) AND (isDeleted:0)${this.formatAdditionalCriteria(true)}${this.formatFilter(filter, true)}`;
     params.fields = SettingsService.settings.service.fields;
     params.count = count;
     params.sort = SettingsService.settings.additionalJobCriteria.sort;
@@ -109,6 +110,7 @@ export class SearchService {
 
   private formatFilter(filter: object, isSearch: boolean, ignoreFields: string[] = []): string {
     let additionalFilter: string = '';
+    console.log("format filter",filter);
     for (let key in filter) {
       if (!ignoreFields.includes(key)) {
         let filterValue: string | string[] = filter[key];
